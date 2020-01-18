@@ -4,3 +4,6 @@ In Unity's Scriptable Rendering Pipeline(SRP) framework, MonoBehaviour.OnRenderO
 ![planer_shadow](https://github.com/sienaiwun/publicImgs/blob/master/imgs/planer_shadow.gif?raw=true)
 
 In this demo, we restore OnRenderObject() in the Universal Rendering Pipeline using SRP.  We give a demo to add custom draws - which are the planar shadow drawing call- to a mesh (the sphere) and a prefab (the props). We can also specify the drawing's order in the drawing script.
+
+To Do:
+Batch the custom draw calls.
