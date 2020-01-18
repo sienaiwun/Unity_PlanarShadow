@@ -68,7 +68,7 @@ namespace UnityEngine.Rendering.Universal
             get => m_RendererFeatures;
         }
 
-        protected List<ScriptableRenderPass> activeRenderPassQueue
+        protected List<Drawing> activeRenderPassQueue
         {
             get => m_ActiveRenderPassQueue;
         }
@@ -90,7 +90,10 @@ namespace UnityEngine.Rendering.Universal
 
         const int k_RenderPassBlockCount = 4;
 
-        List<ScriptableRenderPass> m_ActiveRenderPassQueue = new List<ScriptableRenderPass>(32);
+        List<Drawing> m_ActiveRenderPassQueue = new List<Drawing>(32);
+
+        public static List<CustomDrawing> staticDrawingRender = new List<CustomDrawing>(32);
+        List<CustomDrawing> m_ActiveDrawing = new List<CustomDrawing>(32);
         List<ScriptableRendererFeature> m_RendererFeatures = new List<ScriptableRendererFeature>(10);
         RenderTargetIdentifier m_CameraColorTarget;
         RenderTargetIdentifier m_CameraDepthTarget;
@@ -134,7 +137,11 @@ namespace UnityEngine.Rendering.Universal
             m_CameraColorTarget = colorTarget;
             m_CameraDepthTarget = depthTarget;
         }
-
+        public void SetupCustomDrawer()
+        {
+            foreach (CustomDrawing drawer in ScriptableRenderer.staticDrawingRender)
+                m_ActiveRenderPassQueue.Add(drawer);
+        }
         /// <summary>
         /// Configures the render passes that will execute for this renderer.
         /// This method is called per-camera every frame.
@@ -372,7 +379,11 @@ namespace UnityEngine.Rendering.Universal
             for (int currIndex = blockRanges[blockIndex]; currIndex < endIndex; ++currIndex)
             {
                 var renderPass = m_ActiveRenderPassQueue[currIndex];
-                ExecuteRenderPass(context, renderPass, ref renderingData);
+
+                if(renderPass as ScriptableRenderPass != null)
+                    ExecuteRenderPass(context, (ScriptableRenderPass)renderPass, ref renderingData);
+                else if(renderPass as CustomDrawing != null)
+                    ((CustomDrawing)renderPass).Execute(context, ref renderingData);
             }
 
             if (submit)
@@ -547,12 +558,12 @@ namespace UnityEngine.Rendering.Universal
             CommandBufferPool.Release(cmd);
         }
 
-        internal static void SortStable(List<ScriptableRenderPass> list)
+        internal static void SortStable(List<Drawing> list)
         {
             int j;
             for (int i = 1; i < list.Count; ++i)
             {
-                ScriptableRenderPass curr = list[i];
+                Drawing curr = list[i];
 
                 j = i - 1;
                 for (; j >= 0 && curr < list[j]; --j)
