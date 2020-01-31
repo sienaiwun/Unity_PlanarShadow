@@ -7,5 +7,5 @@ In this demo, we restore OnRenderObject() in the Universal Rendering Pipeline us
 
 ## Cons:
 1. Command buffer draw calls cannot be batched very easily.
-2. Custom culling or disableing this draw call is needed if this draw does not contribute the the final view.
+2. Custom culling or disableing this draw call is needed if this draw does not contribute to the final view.
 
