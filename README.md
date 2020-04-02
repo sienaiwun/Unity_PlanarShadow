@@ -1,3 +1,5 @@
+[![license](http://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/sienaiwun/unity_lwrp_shadowmask_demo/blob/master/LICENSE)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-blue.svg)](https://github.com/sienaiwun/Unity_PlanarShadow/pulls)
 # Unity_PlanarShadow
 In the Unity's Scriptable Rendering Pipeline(SRP) framework, MonoBehaviour.OnRenderObject() is deprecated. However, there are always some needs to add custom per-mesh or per-object drawings besides their own materials' rendering drawing calls. For example, the planar shadow call, which is a very cheap and efficient way to add a shadow to a object, needs a custom drawing to the objects which casts shadow.
 
